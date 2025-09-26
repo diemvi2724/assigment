@@ -1,9 +1,14 @@
-private Double calculate(SIGN sign, Double arg1, Double arg2) {
-    switch (sign) {
-        case PLUS:
-            return arg1 + arg2;
-        default:
-            break;
+public class Calculator {
+    // Định nghĩa enum SIGN
+    public enum SIGN {
+        PLUS, MINUS, MULTIPLY, DIVIDE
     }
-    return 0d;
+
+    private Double calculate(SIGN sign, Double arg1, Double arg2) {
+        switch (sign) {
+            default:
+                break;
+        }
+        return 0d;
+    }
 }
