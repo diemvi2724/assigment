@@ -1,5 +1,4 @@
 public class Calculator {
-    // Định nghĩa enum SIGN
     public enum SIGN {
         PLUS, MINUS, MULTIPLY, DIVIDE
     }
