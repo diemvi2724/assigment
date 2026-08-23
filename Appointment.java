@@ -1,49 +1,93 @@
 package com.project.back_end.models;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "appointments", indexes = {
+    @Index(name = "idx_doctor_date", columnList = "doctor_id, appointment_date"),
+    @Index(name = "idx_patient_date", columnList = "patient_id, appointment_date")
+})
 public class Appointment {
-    private int appointmentId;
-    private int patientId;
-    private int doctorId;
+
+    public enum Status {
+        SCHEDULED,
+        CONFIRMED,
+        COMPLETED,
+        CANCELLED,
+        NO_SHOW
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "patient_id", nullable = false)
+    private Patient patient;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private Doctor doctor;
+
+    @Column(name = "appointment_date", nullable = false)
     private LocalDateTime appointmentDate;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Status status = Status.SCHEDULED;
+
+    @Column(name = "reason_for_visit", length = 255)
+    private String reasonForVisit;
+
+    @Column(name = "clinical_notes", columnDefinition = "TEXT")
+    private String clinicalNotes;
+
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    public Appointment() {
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
-    public Appointment(int appointmentId, int patientId, int doctorId, LocalDateTime appointmentDate, String status, LocalDateTime createdAt) {
-        this.appointmentId = appointmentId;
-        this.patientId = patientId;
-        this.doctorId = doctorId;
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public Appointment() {}
+
+    public Appointment(Patient patient, Doctor doctor, LocalDateTime appointmentDate, String reasonForVisit) {
+        this.patient = patient;
+        this.doctor = doctor;
         this.appointmentDate = appointmentDate;
-        this.status = status;
-        this.createdAt = createdAt;
+        this.reasonForVisit = reasonForVisit;
+        this.status = Status.SCHEDULED;
     }
 
-    public int getAppointmentId() {
-        return appointmentId;
+    public Long getId() {
+        return id;
     }
 
-    public void setAppointmentId(int appointmentId) {
-        this.appointmentId = appointmentId;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public int getPatientId() {
-        return patientId;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
+    public Doctor getDoctor() {
+        return doctor;
     }
 
-    public int getDoctorId() {
-        return doctorId;
-    }
-
-    public void setDoctorId(int doctorId) {
-        this.doctorId = doctorId;
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
     }
 
     public LocalDateTime getAppointmentDate() {
@@ -54,19 +98,35 @@ public class Appointment {
         this.appointmentDate = appointmentDate;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getReasonForVisit() {
+        return reasonForVisit;
+    }
+
+    public void setReasonForVisit(String reasonForVisit) {
+        this.reasonForVisit = reasonForVisit;
+    }
+
+    public String getClinicalNotes() {
+        return clinicalNotes;
+    }
+
+    public void setClinicalNotes(String clinicalNotes) {
+        this.clinicalNotes = clinicalNotes;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }
