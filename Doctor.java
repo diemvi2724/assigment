@@ -2,13 +2,17 @@ package com.project.back_end.models;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "doctors")
-@PrimaryKeyJoinColumn(name = "id")
-public class Doctor extends User {
+public class Doctor {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 100)
+    private String name;
 
     @Column(nullable = false, length = 100)
     private String specialty;
@@ -16,7 +20,7 @@ public class Doctor extends User {
     @Column(name = "license_number", nullable = false, unique = true, length = 50)
     private String licenseNumber;
 
-    @Column(name = "consultation_fee", nullable = false, precision = 10, scale = 2)
+    @Column(name = "consultation_fee", precision = 10, scale = 2)
     private BigDecimal consultationFee;
 
     @Column(columnDefinition = "TEXT")
@@ -25,21 +29,35 @@ public class Doctor extends User {
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Appointment> appointments = new ArrayList<>();
-
+    // Default Constructor
     public Doctor() {
-        super();
-        this.setRole(Role.DOCTOR);
     }
 
-    public Doctor(String email, String passwordHash, String firstName, String lastName, String phone,
-                  String specialty, String licenseNumber, BigDecimal consultationFee) {
-        super(email, passwordHash, firstName, lastName, phone, Role.DOCTOR);
+    // Parameterized Constructor
+    public Doctor(String name, String specialty, String licenseNumber, BigDecimal consultationFee, String biography, boolean active) {
+        this.name = name;
         this.specialty = specialty;
         this.licenseNumber = licenseNumber;
         this.consultationFee = consultationFee;
-        this.active = true;
+        this.biography = biography;
+        this.active = active;
+    }
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSpecialty() {
@@ -80,13 +98,5 @@ public class Doctor extends User {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public List<Appointment> getAppointments() {
-        return appointments;
-    }
-
-    public void setAppointments(List<Appointment> appointments) {
-        this.appointments = appointments;
     }
 }
