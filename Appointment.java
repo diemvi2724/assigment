@@ -1,77 +1,57 @@
 package com.project.back_end.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "appointments", indexes = {
-    @Index(name = "idx_doctor_date", columnList = "doctor_id, appointment_date"),
-    @Index(name = "idx_patient_date", columnList = "patient_id, appointment_date")
-})
+@Table(name = "appointments")
 public class Appointment {
-
-    public enum Status {
-        SCHEDULED,
-        CONFIRMED,
-        COMPLETED,
-        CANCELLED,
-        NO_SHOW
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 
-    @Column(name = "appointment_date", nullable = false)
-    private LocalDateTime appointmentDate;
+    @NotNull(message = "Appointment time is required")
+    @Future(message = "Appointment time must be in the future")
+    @Column(name = "appointment_time", nullable = false)
+    private LocalDateTime appointmentTime;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private Status status = Status.SCHEDULED;
+    @Column(name = "status", nullable = false)
+    private String status;
 
-    @Column(name = "reason_for_visit", length = 255)
+    @Column(name = "reason_for_visit")
     private String reasonForVisit;
 
     @Column(name = "clinical_notes", columnDefinition = "TEXT")
     private String clinicalNotes;
 
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+    public Appointment() {
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    public Appointment() {}
-
-    public Appointment(Patient patient, Doctor doctor, LocalDateTime appointmentDate, String reasonForVisit) {
+    public Appointment(Patient patient, Doctor doctor, LocalDateTime appointmentTime, String status, String reasonForVisit) {
         this.patient = patient;
         this.doctor = doctor;
-        this.appointmentDate = appointmentDate;
+        this.appointmentTime = appointmentTime;
+        this.status = status;
         this.reasonForVisit = reasonForVisit;
-        this.status = Status.SCHEDULED;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Patient getPatient() {
@@ -90,19 +70,19 @@ public class Appointment {
         this.doctor = doctor;
     }
 
-    public LocalDateTime getAppointmentDate() {
-        return appointmentDate;
+    public LocalDateTime getAppointmentTime() {
+        return appointmentTime;
     }
 
-    public void setAppointmentDate(LocalDateTime appointmentDate) {
-        this.appointmentDate = appointmentDate;
+    public void setAppointmentTime(LocalDateTime appointmentTime) {
+        this.appointmentTime = appointmentTime;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -120,13 +100,5 @@ public class Appointment {
 
     public void setClinicalNotes(String clinicalNotes) {
         this.clinicalNotes = clinicalNotes;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
 }
