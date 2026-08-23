@@ -1,17 +1,66 @@
 # User Stories - Smart Clinic Management System
 
-## 1. Patient (Bệnh nhân)
-* As a Patient, I want to book an appointment with a doctor so that I can schedule a consultation at my preferred time.
-* As a Patient, I want to view my upcoming and past appointments so that I can manage my medical schedule.
-* As a Patient, I want to view my medical records and prescriptions so that I can follow my treatment plan.
-* As a Patient, I want to cancel or reschedule my appointment so that I do not miss consultations if my schedule changes.
+## 1. Patient Role
+* **US-P01: User Registration & Profile Management**
+  * *As a* Patient,
+  * *I want to* create an account and update my personal/medical profile,
+  * *So that* the clinic has accurate information for my records and appointments.
+  * **Acceptance Criteria:**
+    * Validates required fields (full name, email, phone, DOB, gender).
+    * Prevents duplicate registrations with the same email.
 
-## 2. Doctor (Bác sĩ)
-* As a Doctor, I want to view my daily appointment schedule so that I can prepare for patient consultations.
-* As a Doctor, I want to write diagnosis and prescribe medications so that the patient's record is updated accurately.
-* As a Doctor, I want to update appointment status (Completed/Cancelled) so that the clinic workflow remains clear.
+* **US-P02: Search Doctors by Specialty & Availability**
+  * *As a* Patient,
+  * *I want to* search for doctors by medical specialty, consultation fees, and available dates,
+  * *So that* I can find the right healthcare specialist for my condition.
+  * **Acceptance Criteria:**
+    * Filtering results by specialty and date returns real-time open slots.
 
-## 3. Admin (Quản trị viên)
-* As an Admin, I want to manage doctor and staff profiles (Create, Update, Delete) so that the clinic staff directory is up to date.
-* As an Admin, I want to view clinic-wide booking statistics and reports so that I can monitor clinic performance.
-* As an Admin, I want to manage user roles and permissions so that the system remains secure.
+* **US-P03: Book & Reschedule Appointments**
+  * *As a* Patient,
+  * *I want to* book, reschedule, or cancel a consultation appointment,
+  * *So that* I can manage my medical visits conveniently.
+  * **Acceptance Criteria:**
+    * Prevents double-booking for the same time slot.
+    * Sends confirmation email/notification upon successful booking.
+
+---
+
+## 2. Doctor Role
+* **US-D01: Manage Consultation Schedule**
+  * *As a* Doctor,
+  * *I want to* define and adjust my working hours, slot durations, and days off,
+  * *So that* patients can only book when I am available.
+  * **Acceptance Criteria:**
+    * Slot generator automatically creates available slots based on working hours.
+
+* **US-D02: View Appointment Queue & Patient History**
+  * *As a* Doctor,
+  * *I want to* access today's appointment list and view past consultation notes,
+  * *So that* I can deliver informed diagnoses and treatments.
+  * **Acceptance Criteria:**
+    * Displays chronologically ordered patient appointments with current status.
+
+* **US-D03: Update Appointment Status & Add Clinical Notes**
+  * *As a* Doctor,
+  * *I want to* mark appointments as completed or no-show and record diagnosis/prescriptions,
+  * *So that* the patient's medical history stays up to date.
+  * **Acceptance Criteria:**
+    * Saves diagnosis text and updates status to `COMPLETED` upon submission.
+
+---
+
+## 3. Admin Role
+* **US-A01: Manage Medical Staff & Clinic Departments**
+  * *As an* Admin,
+  * *I want to* add, update, deactivate, and assign doctors to departments,
+  * *So that* clinic operations and directory information remain accurate.
+  * **Acceptance Criteria:**
+    * Deactivated doctors can no longer receive new bookings.
+
+* **US-A02: System-Wide Audit & Appointment Monitoring**
+  * *As an* Admin,
+  * *I want to* view all clinic appointments and override bookings in case of emergencies,
+  * *So that* the clinic can handle unforeseen scheduling conflicts.
+  * **Acceptance Criteria:**
+    * Admin can reassign or cancel appointments with mandatory reason logging.
