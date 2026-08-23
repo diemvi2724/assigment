@@ -1,0 +1,8 @@
+$ git checkout main
+Switched to branch 'main'
+
+$ git merge bug-fix-typo
+Updating [REAL_HASH]..[REAL_HASH]
+Fast-forward
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
