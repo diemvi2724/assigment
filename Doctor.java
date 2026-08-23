@@ -1,57 +1,45 @@
 package com.project.back_end.models;
 
+import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Doctor {
-    private int doctorId;
-    private String fullName;
-    private String email;
-    private String phoneNumber;
+@Entity
+@Table(name = "doctors")
+@PrimaryKeyJoinColumn(name = "id")
+public class Doctor extends User {
+
+    @Column(nullable = false, length = 100)
     private String specialty;
+
+    @Column(name = "license_number", nullable = false, unique = true, length = 50)
+    private String licenseNumber;
+
+    @Column(name = "consultation_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal consultationFee;
 
+    @Column(columnDefinition = "TEXT")
+    private String biography;
+
+    @Column(name = "is_active", nullable = false)
+    private boolean active = true;
+
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Appointment> appointments = new ArrayList<>();
+
     public Doctor() {
+        super();
+        this.setRole(Role.DOCTOR);
     }
 
-    public Doctor(int doctorId, String fullName, String email, String phoneNumber, String specialty, BigDecimal consultationFee) {
-        this.doctorId = doctorId;
-        this.fullName = fullName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
+    public Doctor(String email, String passwordHash, String firstName, String lastName, String phone,
+                  String specialty, String licenseNumber, BigDecimal consultationFee) {
+        super(email, passwordHash, firstName, lastName, phone, Role.DOCTOR);
         this.specialty = specialty;
+        this.licenseNumber = licenseNumber;
         this.consultationFee = consultationFee;
-    }
-
-    public int getDoctorId() {
-        return doctorId;
-    }
-
-    public void setDoctorId(int doctorId) {
-        this.doctorId = doctorId;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        this.active = true;
     }
 
     public String getSpecialty() {
@@ -62,11 +50,43 @@ public class Doctor {
         this.specialty = specialty;
     }
 
+    public String getLicenseNumber() {
+        return licenseNumber;
+    }
+
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
+    }
+
     public BigDecimal getConsultationFee() {
         return consultationFee;
     }
 
     public void setConsultationFee(BigDecimal consultationFee) {
         this.consultationFee = consultationFee;
+    }
+
+    public String getBiography() {
+        return biography;
+    }
+
+    public void setBiography(String biography) {
+        this.biography = biography;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 }
