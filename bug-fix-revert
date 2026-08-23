@@ -1,3 +1,20 @@
-$ curl -s https://api.github.com/repos/diemvi2724/assigment/pulls
-
-[PASTE TOÀN BỘ OUTPUT CỦA LỆNH CURL Ở ĐÂY]
+{
+  "number": 1,
+  "title": "Bug fix revert",
+  "state": "open",
+  "head": {
+    "label": "diemvi2724:bug-fix-revert",
+    "ref": "bug-fix-revert",
+    "repo": {
+      "name": "mcino-Introduction-to-Git-and-GitHub",
+      "full_name": "diemvi2724/mcino-Introduction-to-Git-and-GitHub"
+    }
+  },
+  "base": {
+    "ref": "main",
+    "repo": {
+      "name": "mcino-Introduction-to-Git-and-GitHub",
+      "full_name": "ibm-developer-skills-network/mcino-Introduction-to-Git-and-GitHub"
+    }
+  }
+}
