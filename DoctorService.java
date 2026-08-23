@@ -1,40 +1,58 @@
 package com.project.back_end.services;
 
 import com.project.back_end.models.Doctor;
+import com.project.back_end.repo.DoctorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class DoctorService {
 
-    public List<Doctor> getAllDoctors() {
-        // Lấy danh sách tất cả bác sĩ
-        return List.of();
+    private final DoctorRepository doctorRepository;
+
+    @Autowired
+    public DoctorService(DoctorRepository doctorRepository) {
+        this.doctorRepository = doctorRepository;
     }
 
-    public Optional<Doctor> getDoctorById(int doctorId) {
-        // Tìm thông tin chi tiết bác sĩ theo ID
-        return Optional.empty();
+    public List<Doctor> getAllActiveDoctors() {
+        return doctorRepository.findByActiveTrue();
     }
 
     public List<Doctor> getDoctorsBySpecialty(String specialty) {
-        // Lọc danh sách bác sĩ theo chuyên khoa
-        return List.of();
+        return doctorRepository.findBySpecialtyIgnoreCaseAndActiveTrue(specialty);
+    }
+
+    public Optional<Doctor> getDoctorById(Long id) {
+        return doctorRepository.findById(id);
     }
 
     public Doctor saveDoctor(Doctor doctor) {
-        // Lưu hoặc thêm mới thông tin bác sĩ
-        return doctor;
+        return doctorRepository.save(doctor);
     }
 
-    public Doctor updateDoctor(int doctorId, Doctor doctorDetails) {
-        // Cập nhật chuyên khoa, giá khám, thông tin liên hệ của bác sĩ
-        return doctorDetails;
+    public Optional<Doctor> updateDoctor(Long id, Doctor doctorDetails) {
+        return doctorRepository.findById(id).map(existingDoctor -> {
+            existingDoctor.setFirstName(doctorDetails.getFirstName());
+            existingDoctor.setLastName(doctorDetails.getLastName());
+            existingDoctor.setPhone(doctorDetails.getPhone());
+            existingDoctor.setSpecialty(doctorDetails.getSpecialty());
+            existingDoctor.setConsultationFee(doctorDetails.getConsultationFee());
+            existingDoctor.setBiography(doctorDetails.getBiography());
+            return doctorRepository.save(existingDoctor);
+        });
     }
 
-    public void deleteDoctor(int doctorId) {
-        // Xóa bác sĩ khỏi hệ thống
+    public boolean deactivateDoctor(Long id) {
+        return doctorRepository.findById(id).map(doctor -> {
+            doctor.setActive(false);
+            doctorRepository.save(doctor);
+            return true;
+        }).orElse(false);
     }
 }
